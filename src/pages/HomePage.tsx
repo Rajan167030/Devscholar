@@ -4,10 +4,14 @@ import CourseCard from '../components/CourseCard';
 import CategoryCard from '../components/CategoryCard';
 import { courses, categories } from '../data/coursesData';
 
-export default function HomePage() {
+interface HomePageProps {
+  onNavigate?: (page: string, category?: string) => void;
+}
+
+export default function HomePage({ onNavigate }: HomePageProps) {
   return (
     <div className="bg-black min-h-screen">
-      <Hero />
+      <Hero onNavigate={onNavigate} />
       <StatsSection />
 
       <section className="bg-black py-16">
@@ -29,7 +33,11 @@ export default function HomePage() {
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {categories.map((category) => (
-              <CategoryCard key={category.id} {...category} />
+              <CategoryCard
+                key={category.id}
+                {...category}
+                onExplore={() => onNavigate?.('courses', category.name)}
+              />
             ))}
           </div>
         </div>

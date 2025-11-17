@@ -1,15 +1,19 @@
 import { ArrowRight, User, Archive } from 'lucide-react';
 
-export default function Hero() {
+interface HeroProps {
+  onNavigate?: (page: string, category?: string) => void;
+}
+
+export default function Hero({ onNavigate }: HeroProps) {
   return (
     <div className="relative min-h-screen bg-black text-white pt-24">
       <div className="max-w-7xl mx-auto px-6 py-20">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div className="space-y-8">
             <h1 className="text-6xl lg:text-7xl font-bold leading-tight tracking-tight">
-              UNLOCKED
+              Dev
               <br />
-              CODING
+              Scholar
             </h1>
             <p className="text-2xl lg:text-3xl font-semibold text-gray-300">
               become a 100xdev without selling ur kidney
@@ -30,11 +34,11 @@ export default function Hero() {
         </div>
 
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <button className="group flex items-center justify-between px-8 py-5 bg-gray-900 hover:bg-gray-800 border border-gray-800 rounded-xl transition-all">
+          <button className="group flex items-center justify-between px-8 py-5 bg-gray-900 hover:bg-gray-800 border border-gray-800 rounded-xl transition-all" onClick={() => onNavigate?.('courses')}>
             <span className="text-lg font-semibold">VIEW ALL COURSES</span>
             <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
           </button>
-          <button className="group flex items-center justify-between px-8 py-5 bg-gray-900 hover:bg-gray-800 border border-gray-800 rounded-xl transition-all">
+          <button className="group flex items-center justify-between px-8 py-5 bg-gray-900 hover:bg-gray-800 border border-gray-800 rounded-xl transition-all" onClick={() => onNavigate?.('teachers')}>
             <span className="text-lg font-semibold">VIEW ALL TEACHERS</span>
             <User className="group-hover:translate-x-1 transition-transform" size={20} />
           </button>

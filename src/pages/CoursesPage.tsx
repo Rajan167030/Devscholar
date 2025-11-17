@@ -1,10 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CourseCard from '../components/CourseCard';
 import { courses, categories } from '../data/coursesData';
 import { Filter } from 'lucide-react';
 
-export default function CoursesPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+interface CoursesPageProps {
+  initialCategory?: string;
+}
+
+export default function CoursesPage({ initialCategory }: CoursesPageProps) {
+  const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory ?? 'All');
+
+  useEffect(() => {
+    if (initialCategory) setSelectedCategory(initialCategory);
+  }, [initialCategory]);
 
   const filteredCourses =
     selectedCategory === 'All'

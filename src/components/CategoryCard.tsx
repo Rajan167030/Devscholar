@@ -3,6 +3,7 @@ interface CategoryCardProps {
   description: string;
   thumbnail: string;
   courseCount: number;
+  onExplore?: () => void;
 }
 
 export default function CategoryCard({
@@ -10,9 +11,10 @@ export default function CategoryCard({
   description,
   thumbnail,
   courseCount,
+  onExplore,
 }: CategoryCardProps) {
   return (
-    <div className="group bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden hover:border-gray-700 transition-all hover:transform hover:scale-[1.02] cursor-pointer">
+    <div onClick={onExplore} className="group bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden hover:border-gray-700 transition-all hover:transform hover:scale-[1.02] cursor-pointer">
       <div className="relative h-52 overflow-hidden">
         <img
           src={thumbnail}
@@ -25,13 +27,19 @@ export default function CategoryCard({
         </div>
       </div>
 
-      <div className="p-6">
+        <div className="p-6">
         <p className="text-gray-400 text-sm mb-4 line-clamp-2">{description}</p>
         <div className="flex items-center justify-between">
           <span className="text-blue-500 text-sm font-semibold">
             {courseCount} Courses
           </span>
-          <button className="text-sm text-gray-400 hover:text-white transition-colors">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onExplore?.();
+            }}
+            className="text-sm text-gray-400 hover:text-white transition-colors"
+          >
             Explore →
           </button>
         </div>

@@ -5,7 +5,7 @@ export default function AboutPage() {
     <div className="bg-black min-h-screen pt-24">
       <div className="max-w-5xl mx-auto px-6 py-16">
         <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-white mb-6">About UnlockedCoding</h1>
+          <h1 className="text-5xl font-bold text-white mb-6">About DevScholar</h1>
           <p className="text-xl text-gray-400">
             Your gateway to mastering programming and technology. Learn, build, and grow with our comprehensive courses.
           </p>
@@ -17,7 +17,7 @@ export default function AboutPage() {
             We believe that programming education should be accessible to everyone, regardless of their background or financial situation. Our platform provides high-quality, comprehensive coding courses from industry experts, completely free of charge.
           </p>
           <p className="text-gray-300 text-lg leading-relaxed">
-            Founded in April 2024, Unlocked Coding emerged from a simple yet powerful vision: to democratize access to world-class programming education. We recognized that traditional coding bootcamps and expensive courses were creating barriers for talented individuals who couldn't afford premium education. Our solution was to curate the best programming content from top instructors and make it freely available to everyone.
+            Founded in April 2024, DevScholar emerged from a simple yet powerful vision: to democratize access to world-class programming education. We recognized that traditional coding bootcamps and expensive courses were creating barriers for talented individuals who couldn't afford premium education. Our solution was to curate the best programming content from top instructors and make it freely available to everyone.
           </p>
         </div>
 

@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 interface NavbarProps {
   currentPage: string;
-  onNavigate: (page: string) => void;
+  onNavigate: (page: string, category?: string) => void;
 }
 
 export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
@@ -18,15 +18,15 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black/90 backdrop-blur-sm border-b border-gray-800">
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <button
-            onClick={() => onNavigate('home')}
-            className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity"
-          >
-            <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
-              <div className="w-0 h-0 border-t-[8px] border-t-transparent border-l-[14px] border-l-black border-b-[8px] border-b-transparent ml-1"></div>
-            </div>
-            <span className="text-xl font-bold tracking-tight">UNLOCKEDCODING</span>
-          </button>
+            <button
+              onClick={() => onNavigate('home')}
+              className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity"
+            >
+              <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
+                <div className="w-0 h-0 border-t-[8px] border-t-transparent border-l-[14px] border-l-black border-b-[8px] border-b-transparent ml-1"></div>
+              </div>
+              <span className="text-xl font-bold tracking-tight">DevScholar</span>
+            </button>
 
           <div className="flex items-center gap-8">
             <button
@@ -36,6 +36,14 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
               }`}
             >
               Home
+            </button>
+            <button
+              onClick={() => onNavigate('teachers')}
+              className={`text-sm font-medium transition-colors ${
+                currentPage === 'teachers' ? 'text-white' : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              Instructors
             </button>
             <button
               onClick={() => onNavigate('categories')}

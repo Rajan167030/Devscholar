@@ -25,7 +25,7 @@ function App() {
       case 'home':
         return <HomePage onNavigate={navigate} />;
       case 'categories':
-        return <CategoriesPage />;
+        return <CategoriesPage onNavigate={navigate} />;
       case 'courses':
         return <CoursesPage initialCategory={selectedCategory} />;
       case 'about':

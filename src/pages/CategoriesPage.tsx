@@ -2,7 +2,11 @@ import CategoryCard from '../components/CategoryCard';
 import StatsSection from '../components/StatsSection';
 import { categories } from '../data/coursesData';
 
-export default function CategoriesPage() {
+interface CategoriesPageProps {
+  onNavigate?: (page: string, category?: string) => void;
+}
+
+export default function CategoriesPage({ onNavigate }: CategoriesPageProps) {
   return (
     <div className="bg-black min-h-screen pt-24">
       <div className="max-w-7xl mx-auto px-6 py-16">
@@ -18,7 +22,11 @@ export default function CategoriesPage() {
         <div className="py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {categories.map((category) => (
-              <CategoryCard key={category.id} {...category} />
+              <CategoryCard
+                key={category.id}
+                {...category}
+                onExplore={() => onNavigate?.('courses', category.name)}
+              />
             ))}
           </div>
         </div>

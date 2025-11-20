@@ -41,6 +41,15 @@ export const categories = [
     thumbnail: 'https://images.pexels.com/photos/2881229/pexels-photo-2881229.jpeg?auto=compress&cs=tinysrgb&w=600',
     courseCount: 7,
   },
+  {
+    id: 7,
+    name: 'Web 3',
+    description: 'Learn blockchain, smart contracts, and decentralized application development.',
+    thumbnail: 'https://images.pexels.com/photos/8441245/pexels-photo-8441245.jpeg?auto=compress&cs=tinysrgb&w=600',
+    courseCount: 10,
+    // Drive folder ID containing multiple Web 3 course videos
+    driveFolderId: '16SD3dSLzHPP4RV_4m18j5LJJ_TBB1CXb',
+  },
 ];
 
 export const courses = [
@@ -57,6 +66,8 @@ export const courses = [
     rating: 4.8,
     level: 'Beginner',
     category: 'Web Development',
+    // Optional Google Drive folder ID containing course videos (public or shared)
+    driveFolderId: '1u5y1eZTfBuceiteOHKg9pApmNAKdQ22d',
   },
   {
     id: 2,

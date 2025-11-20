@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import CourseCard from '../components/CourseCard';
+import DriveVideos from '../components/DriveVideos';
 import { courses, categories } from '../data/coursesData';
 import { Filter } from 'lucide-react';
 
@@ -18,6 +19,9 @@ export default function CoursesPage({ initialCategory }: CoursesPageProps) {
     selectedCategory === 'All'
       ? courses
       : courses.filter((course) => course.category === selectedCategory);
+
+  const selectedCategoryObj =
+    selectedCategory === 'All' ? undefined : categories.find((c) => c.name === selectedCategory);
 
   return (
     <div className="bg-black min-h-screen pt-24">
@@ -70,6 +74,12 @@ export default function CoursesPage({ initialCategory }: CoursesPageProps) {
             <CourseCard key={course.id} {...course} />
           ))}
         </div>
+
+        {/* If the selected category has a Drive folder ID, render its videos below the grid.
+            Uses Vite env var VITE_GOOGLE_DRIVE_API_KEY if available. */}
+        {selectedCategoryObj?.driveFolderId && (
+          <DriveVideos folderId={selectedCategoryObj.driveFolderId} apiKey={import.meta.env.VITE_GOOGLE_DRIVE_API_KEY} />
+        )}
       </div>
     </div>
   );

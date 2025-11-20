@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="256" height="256">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="#f5f5f5"/>
+  
+  <!-- Laptop frame -->
+  <rect x="120" y="80" width="272" height="200" rx="20" fill="none" stroke="#1976d2" stroke-width="24"/>
+  
+  <!-- Laptop screen -->
+  <rect x="140" y="100" width="232" height="160" rx="12" fill="white"/>
+  
+  <!-- Book icon in screen -->
+  <g transform="translate(256, 180)">
+    <!-- Left page -->
+    <path d="M -40 -50 L -40 50 Q -20 60 0 55 L 0 -55 Q -20 -60 -40 -50" fill="#1a1a1a"/>
+    <!-- Right page -->
+    <path d="M 0 -55 L 0 55 Q 20 60 40 50 L 40 -50 Q 20 -60 0 -55" fill="#1a1a1a"/>
+    <!-- Book spine -->
+    <line x1="-2" y1="-55" x2="-2" y2="55" stroke="#1a1a1a" stroke-width="4"/>
+  </g>
+  
+  <!-- Laptop stand -->
+  <rect x="160" y="280" width="192" height="24" rx="12" fill="#1976d2"/>
+</svg>

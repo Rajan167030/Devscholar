@@ -20,11 +20,13 @@ export default function Navbar({ currentPage, onNavigate }: NavbarProps) {
         <div className="flex items-center justify-between">
             <button
               onClick={() => onNavigate('home')}
-              className="flex items-center gap-2 text-white hover:opacity-80 transition-opacity"
+              className="flex items-center gap-3 text-white hover:opacity-80 transition-opacity"
             >
-              <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
-                <div className="w-0 h-0 border-t-[8px] border-t-transparent border-l-[14px] border-l-black border-b-[8px] border-b-transparent ml-1"></div>
-              </div>
+              <img 
+                src="/logo.svg" 
+                alt="DevScholar Logo" 
+                className="w-10 h-10"
+              />
               <span className="text-xl font-bold tracking-tight">DevScholar</span>
             </button>
 

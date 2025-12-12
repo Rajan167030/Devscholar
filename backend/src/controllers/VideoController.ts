@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Video from '../models/Video.js';
+import Video, { IVideo } from '../models/Video.js';
 import Course from '../models/Course.js';
 
 class VideoController {
@@ -8,10 +8,7 @@ class VideoController {
     try {
       const { courseId } = req.params;
 
-      const videos = await Video.findAll({
-        where: { courseId, isPublished: true },
-        order: [['order', 'ASC']],
-      });
+      const videos = await Video.find({ courseId, isPublished: true }).sort({ order: 1 });
 
       res.status(200).json({
         success: true,
@@ -31,9 +28,7 @@ class VideoController {
     try {
       const { id } = req.params;
 
-      const video = await Video.findByPk(id, {
-        include: [{ model: Course, as: 'course' }],
-      });
+      const video = await Video.findById(id).populate('courseId');
 
       if (!video) {
         res.status(404).json({
@@ -44,8 +39,7 @@ class VideoController {
       }
 
       // Increment views
-      video.views += 1;
-      await video.save();
+      await Video.findByIdAndUpdate(id, { $inc: { views: 1 } });
 
       res.status(200).json({
         success: true,
@@ -75,7 +69,7 @@ class VideoController {
       }
 
       // Check if course exists
-      const course = await Course.findByPk(courseId);
+      const course = await Course.findById(courseId);
       if (!course) {
         res.status(404).json({
           success: false,
@@ -84,7 +78,7 @@ class VideoController {
         return;
       }
 
-      const video = await Video.create({
+      const video = new Video({
         courseId,
         title,
         description,
@@ -93,6 +87,8 @@ class VideoController {
         duration,
         order,
       });
+
+      await video.save();
 
       res.status(201).json({
         success: true,
@@ -114,7 +110,19 @@ class VideoController {
       const { id } = req.params;
       const { title, description, videoUrl, thumbnail, duration, order, isPublished } = req.body;
 
-      const video = await Video.findByPk(id);
+      const video = await Video.findByIdAndUpdate(
+        id,
+        {
+          title,
+          description,
+          videoUrl,
+          thumbnail,
+          duration,
+          order,
+          isPublished,
+        },
+        { new: true, runValidators: true }
+      );
 
       if (!video) {
         res.status(404).json({
@@ -123,16 +131,6 @@ class VideoController {
         });
         return;
       }
-
-      await video.update({
-        title: title ?? video.title,
-        description: description ?? video.description,
-        videoUrl: videoUrl ?? video.videoUrl,
-        thumbnail: thumbnail ?? video.thumbnail,
-        duration: duration ?? video.duration,
-        order: order ?? video.order,
-        isPublished: isPublished ?? video.isPublished,
-      });
 
       res.status(200).json({
         success: true,
@@ -153,7 +151,7 @@ class VideoController {
     try {
       const { id } = req.params;
 
-      const video = await Video.findByPk(id);
+      const video = await Video.findByIdAndDelete(id);
 
       if (!video) {
         res.status(404).json({
@@ -162,8 +160,6 @@ class VideoController {
         });
         return;
       }
-
-      await video.destroy();
 
       res.status(200).json({
         success: true,

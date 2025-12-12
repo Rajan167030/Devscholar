@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Course from '../models/Course.js';
+import Course, { ICourse } from '../models/Course.js';
 import Video from '../models/Video.js';
 
 class CourseController {
@@ -8,26 +8,23 @@ class CourseController {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
-      const offset = (page - 1) * limit;
+      const skip = (page - 1) * limit;
 
-      const { count, rows } = await Course.findAndCountAll({
-        where: { isPublished: true },
-        include: [
-          { model: Video, as: 'videos' },
-        ],
-        limit,
-        offset,
-        order: [['createdAt', 'DESC']],
-      });
+      const total = await Course.countDocuments({ isPublished: true });
+      const courses = await Course.find({ isPublished: true })
+        .populate('instructorId')
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
 
       res.status(200).json({
         success: true,
-        data: rows,
+        data: courses,
         pagination: {
-          total: count,
+          total,
           page,
           limit,
-          pages: Math.ceil(count / limit),
+          pages: Math.ceil(total / limit),
         },
       });
     } catch (error) {
@@ -44,13 +41,9 @@ class CourseController {
     try {
       const { category } = req.params;
 
-      const courses = await Course.findAll({
-        where: { category, isPublished: true },
-        include: [
-          { model: Video, as: 'videos' },
-        ],
-        order: [['createdAt', 'DESC']],
-      });
+      const courses = await Course.find({ category, isPublished: true })
+        .populate('instructorId')
+        .sort({ createdAt: -1 });
 
       res.status(200).json({
         success: true,
@@ -70,11 +63,7 @@ class CourseController {
     try {
       const { id } = req.params;
 
-      const course = await Course.findByPk(id, {
-        include: [
-          { model: Video, as: 'videos', order: [['order', 'ASC']] },
-        ],
-      });
+      const course = await Course.findById(id).populate('instructorId');
 
       if (!course) {
         res.status(404).json({
@@ -84,9 +73,12 @@ class CourseController {
         return;
       }
 
+      // Get videos for this course
+      const videos = await Video.find({ courseId: id }).sort({ order: 1 });
+
       res.status(200).json({
         success: true,
-        data: course,
+        data: { ...course.toObject(), videos },
       });
     } catch (error) {
       res.status(500).json({
@@ -111,7 +103,7 @@ class CourseController {
         return;
       }
 
-      const course = await Course.create({
+      const course = new Course({
         title,
         description,
         thumbnail,
@@ -122,6 +114,8 @@ class CourseController {
         duration,
         level: level || 'Beginner',
       });
+
+      await course.save();
 
       res.status(201).json({
         success: true,
@@ -143,7 +137,21 @@ class CourseController {
       const { id } = req.params;
       const { title, description, thumbnail, category, price, originalPrice, duration, level, isPublished } = req.body;
 
-      const course = await Course.findByPk(id);
+      const course = await Course.findByIdAndUpdate(
+        id,
+        {
+          title,
+          description,
+          thumbnail,
+          category,
+          price,
+          originalPrice,
+          duration,
+          level,
+          isPublished,
+        },
+        { new: true, runValidators: true }
+      );
 
       if (!course) {
         res.status(404).json({
@@ -152,18 +160,6 @@ class CourseController {
         });
         return;
       }
-
-      await course.update({
-        title: title ?? course.title,
-        description: description ?? course.description,
-        thumbnail: thumbnail ?? course.thumbnail,
-        category: category ?? course.category,
-        price: price ?? course.price,
-        originalPrice: originalPrice ?? course.originalPrice,
-        duration: duration ?? course.duration,
-        level: level ?? course.level,
-        isPublished: isPublished ?? course.isPublished,
-      });
 
       res.status(200).json({
         success: true,
@@ -184,7 +180,7 @@ class CourseController {
     try {
       const { id } = req.params;
 
-      const course = await Course.findByPk(id);
+      const course = await Course.findById(id);
 
       if (!course) {
         res.status(404).json({
@@ -195,8 +191,8 @@ class CourseController {
       }
 
       // Delete associated videos
-      await Video.destroy({ where: { courseId: id } });
-      await course.destroy();
+      await Video.deleteMany({ courseId: id });
+      await Course.findByIdAndDelete(id);
 
       res.status(200).json({
         success: true,

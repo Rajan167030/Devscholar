@@ -71,6 +71,10 @@ const seedDatabase = async () => {
     const instructor1 = createdUsers.find(u => u.email === 'instructor1@devscholar.com');
     const instructor2 = createdUsers.find(u => u.email === 'instructor2@devscholar.com');
 
+    if (!instructor1 || !instructor2) {
+      throw new Error('Instructors not found in created users');
+    }
+
     // Create sample courses
     const courses = [
       {

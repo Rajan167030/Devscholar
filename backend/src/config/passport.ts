@@ -43,7 +43,7 @@ passport.use(
         await newUser.save();
         return done(null, newUser);
       } catch (error) {
-        return done(error, null);
+        return done(error as Error, false);
       }
     }
   )

@@ -18,10 +18,11 @@ router.get(
   passport.authenticate('google', { failureRedirect: '/login' }),
   (req, res) => {
     // Generate JWT token
+    const jwtSecret = (process.env.JWT_SECRET || 'default-secret') as jwt.Secret;
     const token = jwt.sign(
       { id: (req.user as any)._id, email: (req.user as any).email },
-      process.env.JWT_SECRET!,
-      { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+      jwtSecret,
+      { expiresIn: (process.env.JWT_EXPIRES_IN || '7d') as any }
     );
 
     // Redirect to frontend with token
@@ -42,7 +43,7 @@ router.get('/me', async (req, res) => {
       });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'default-secret') as any;
     const user = await req.app.locals.User.findById(decoded.id).select('-password');
 
     if (!user) {

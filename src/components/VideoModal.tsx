@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import CustomVideoPlayer from './CustomVideoPlayer';
 
 interface VideoModalProps {

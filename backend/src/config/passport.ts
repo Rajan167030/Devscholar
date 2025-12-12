@@ -19,7 +19,10 @@ passport.use(
         }
 
         // Check if user exists with same email
-        user = await User.findOne({ email: profile.emails?.[0].value });
+        const userEmail = profile.emails?.[0]?.value;
+        if (userEmail) {
+          user = await User.findOne({ email: userEmail });
+        }
 
         if (user) {
           // Link Google account to existing user
@@ -29,13 +32,18 @@ passport.use(
           return done(null, user);
         }
 
+        // Verify we have required profile data
+        if (!userEmail) {
+          return done(new Error('Email not provided by Google'), false);
+        }
+
         // Create new user
         const newUser = new User({
           googleId: profile.id,
-          email: profile.emails?.[0].value,
+          email: userEmail,
           firstName: profile.name?.givenName || profile.displayName?.split(' ')[0] || 'User',
           lastName: profile.name?.familyName || profile.displayName?.split(' ').slice(1).join(' ') || '',
-          avatar: profile.photos?.[0].value,
+          avatar: profile.photos?.[0]?.value,
           role: 'student', // Default role for OAuth users
           isActive: true,
         });

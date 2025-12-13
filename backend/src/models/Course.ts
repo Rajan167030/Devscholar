@@ -1,14 +1,11 @@
-import { DataTypes, Model, Optional } from 'sequelize';
-import sequelize from '../connection.js';
-import User from './User.js';
+import mongoose, { Document, Schema } from 'mongoose';
 
-export interface CourseAttributes {
-  id: number;
+export interface ICourse extends Document {
   title: string;
   description: string;
   thumbnail: string;
   category: string;
-  instructorId: number;
+  instructorId: mongoose.Types.ObjectId;
   price: number;
   originalPrice: number;
   duration: string;
@@ -18,91 +15,52 @@ export interface CourseAttributes {
   updatedAt: Date;
 }
 
-export interface CourseCreationAttributes extends Optional<CourseAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
-
-class Course
-  extends Model<CourseAttributes, CourseCreationAttributes>
-  implements CourseAttributes
-{
-  public id!: number;
-  public title!: string;
-  public description!: string;
-  public thumbnail!: string;
-  public category!: string;
-  public instructorId!: number;
-  public price!: number;
-  public originalPrice!: number;
-  public duration!: string;
-  public level!: 'Beginner' | 'Intermediate' | 'Advanced' | 'All Levels';
-  public isPublished!: boolean;
-  public readonly createdAt!: Date;
-  public readonly updatedAt!: Date;
-}
-
-Course.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    title: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    thumbnail: {
-      type: DataTypes.STRING(255),
-    },
-    category: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
-    },
-    instructorId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: User,
-        key: 'id',
-      },
-    },
-    price: {
-      type: DataTypes.DECIMAL(10, 2),
-      defaultValue: 0,
-    },
-    originalPrice: {
-      type: DataTypes.DECIMAL(10, 2),
-    },
-    duration: {
-      type: DataTypes.STRING(50),
-    },
-    level: {
-      type: DataTypes.ENUM('Beginner', 'Intermediate', 'Advanced', 'All Levels'),
-      defaultValue: 'Beginner',
-    },
-    isPublished: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-    createdAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
-    updatedAt: {
-      type: DataTypes.DATE,
-      defaultValue: DataTypes.NOW,
-    },
+const CourseSchema: Schema = new Schema({
+  title: {
+    type: String,
+    required: true,
+    trim: true,
   },
-  {
-    sequelize,
-    tableName: 'courses',
-    timestamps: true,
-  }
-);
+  description: {
+    type: String,
+    required: true,
+  },
+  thumbnail: {
+    type: String,
+    trim: true,
+  },
+  category: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  instructorId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  price: {
+    type: Number,
+    default: 0,
+  },
+  originalPrice: {
+    type: Number,
+  },
+  duration: {
+    type: String,
+    trim: true,
+  },
+  level: {
+    type: String,
+    enum: ['Beginner', 'Intermediate', 'Advanced', 'All Levels'],
+    default: 'Beginner',
+  },
+  isPublished: {
+    type: Boolean,
+    default: false,
+  },
+}, {
+  timestamps: true,
+});
 
-Course.belongsTo(User, { foreignKey: 'instructorId', as: 'instructor' });
-
-export default Course;
+export default mongoose.model<ICourse>('Course', CourseSchema);

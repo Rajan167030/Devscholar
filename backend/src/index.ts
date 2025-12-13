@@ -1,13 +1,16 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import dotenv from 'dotenv';
-import sequelize from './database/connection.js';
+import passport from './config/passport.js';
+import connectDB from './database/connection.js';
 import courseRoutes from './routes/courseRoutes.js';
 import videoRoutes from './routes/videoRoutes.js';
-
-dotenv.config();
+import googleAuthRoutes from './routes/auth/googleAuth.js';
 
 const app: Express = express();
 const PORT = process.env.PORT || 5000;
@@ -16,10 +19,14 @@ const PORT = process.env.PORT || 5000;
 app.use(helmet());
 app.use(cors({
   origin: process.env.CORS_ORIGIN?.split(',') || 'http://localhost:5173',
+  credentials: true,
 }));
 app.use(morgan('combined'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
+
+// Passport middleware
+app.use(passport.initialize());
 
 // Health check
 app.get('/health', (_req: Request, res: Response) => {
@@ -30,6 +37,7 @@ app.get('/health', (_req: Request, res: Response) => {
 });
 
 // API Routes
+app.use('/api/auth', googleAuthRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/videos', videoRoutes);
 
@@ -44,11 +52,8 @@ app.use((_req: Request, res: Response) => {
 // Database sync and start server
 const startServer = async (): Promise<void> => {
   try {
-    await sequelize.authenticate();
+    await connectDB();
     console.log('✓ Database connected successfully');
-
-    await sequelize.sync({ alter: process.env.NODE_ENV === 'development' });
-    console.log('✓ Models synced successfully');
 
     app.listen(PORT, () => {
       console.log(`✓ Server running on http://localhost:${PORT}`);

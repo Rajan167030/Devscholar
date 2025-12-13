@@ -53,7 +53,7 @@ export const instructors: Instructor[] = [
     bio: 'Founder of 100xDevs, Harkirat is known for his deep dives into full-stack development, Web3, and open source contributions.',
     categories: ['Full Stack', 'Web3', 'DevOps'],
     coursesCount: 4,
-    youtubeChannelId: 'UU17yVqK9eU_hESfV0ssM89A', // Uploads
+    youtubeChannelId: 'UCn1XnDWhsLS5URXTi5wtFTA', // @harkirat1 channel
   },
   {
     id: 'love-babbar',
